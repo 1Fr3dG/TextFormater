@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'TextFormater_Example' do
+  pod 'TextFormater', :path => '../'
+
+  target 'TextFormater_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
