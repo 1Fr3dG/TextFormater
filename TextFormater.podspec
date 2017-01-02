@@ -21,7 +21,7 @@ Convert a short string with formatting commands to attributed string. For used t
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '9.0'
-  s.osx.deployment_target = '12.0'
+  s.osx.deployment_target = '10.12'
 
   s.source_files = 'TextFormater/Classes/**/*'
   
