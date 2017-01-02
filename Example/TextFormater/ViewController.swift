@@ -7,12 +7,20 @@
 //
 
 import UIKit
+import TextFormater
 
-class ViewController: UIViewController {
-
+class ViewController: UIViewController, UITextViewDelegate {
+    
+    let textFormater = TextFormater()
+    
+    @IBOutlet weak var textResult: UITextView!
+    
+    @IBOutlet weak var textCode: UITextView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        textResult.attributedText = textFormater.format(textCode.text)
     }
 
     override func didReceiveMemoryWarning() {
@@ -20,5 +28,8 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    func textViewDidChange(_ textView: UITextView) {
+            textResult.attributedText = textFormater.format(textCode.text)
+    }
 }
 
