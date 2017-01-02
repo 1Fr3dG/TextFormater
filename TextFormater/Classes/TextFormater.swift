@@ -76,6 +76,9 @@ public class TextFormater : NSObject {
         "font" : "Font",
         "color" : "ForegroundColor",
         "align" : "Alignment",
+        "left" : "Alignment",
+        "center" : "Alignment",
+        "right" : "Alignment",
         "b" : "ThemeFont",
         "i" : "ThemeFont",
         "fontsize" : "FontSizeAdjust",
@@ -314,8 +317,21 @@ public class TextFormater : NSObject {
                         style.setParagraphStyle(NSParagraphStyle.default)
                     }
                     
-                    if let _position = parameter(in: _command, withKey: "to") {
-                        switch _position {
+                    if _commandName == "align" {
+                        if let _position = parameter(in: _command, withKey: "to") {
+                            switch _position {
+                            case "left":
+                                style.alignment = .left
+                            case "center":
+                                style.alignment = .center
+                            case "right":
+                                style.alignment = .right
+                            default:
+                                break
+                            }
+                        }
+                    } else {
+                        switch _commandName {
                         case "left":
                             style.alignment = .left
                         case "center":
