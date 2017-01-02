@@ -1,15 +1,7 @@
-#
-# Be sure to run `pod lib lint TextFormater.podspec' to ensure this is a
-# valid spec before submitting.
-#
-# Any lines starting with a # are optional, but their use is encouraged
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
-#
-
 Pod::Spec.new do |s|
   s.name             = 'TextFormater'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of TextFormater.'
+  s.summary          = 'Convert String to NSAttributedString'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,17 +10,18 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+Convert a short string with formatting commands to attributed string. For used to format label or button.
                        DESC
 
-  s.homepage         = 'https://github.com/<GITHUB_USERNAME>/TextFormater'
+  s.homepage         = 'https://github.com/1fr3dg/TextFormater'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Alfred Gao' => 'alfredg@alfredg.cn' }
-  s.source           = { :git => 'https://github.com/<GITHUB_USERNAME>/TextFormater.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/1fr3dg/TextFormater.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
+  s.osx.deployment_target = '12.0'
 
   s.source_files = 'TextFormater/Classes/**/*'
   
