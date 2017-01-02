@@ -75,6 +75,7 @@ public class TextFormater : NSObject {
         "br": "NewLine",
         "font" : "Font",
         "color" : "ForegroundColor",
+        "bgcolor" : "BackgroundColor",
         "align" : "Alignment",
         "left" : "Alignment",
         "center" : "Alignment",
@@ -308,6 +309,17 @@ public class TextFormater : NSObject {
                     }
                     
                     attrs.append((NSForegroundColorAttributeName, newcolor))
+                    
+                case "BackgroundColor":
+                    var newcolor = UIColor.black
+                    if let _newcolorname = parameter(in: _command, withKey: "name"),
+                        let _newcolor = colors[_newcolorname] {
+                        newcolor = _newcolor
+                    } else if let _ = parameter(in: _command, withKey: "rgb") {
+                        //TODO: 设置 rbg 颜色
+                    }
+                    
+                    attrs.append((NSBackgroundColorAttributeName, newcolor))
                     
                 case "Alignment":
                     let style = NSMutableParagraphStyle()
