@@ -1,6 +1,6 @@
 # TextFormater
 
-[![CI Status](http://img.shields.io/travis/Alfred Gao/TextFormater.svg?style=flat)](https://travis-ci.org/Alfred Gao/TextFormater)
+[![CI Status](http://img.shields.io/travis/1Fr3dG/TextFormater.svg?style=flat)](https://travis-ci.org/1Fr3dG/TextFormater)
 [![Version](https://img.shields.io/cocoapods/v/TextFormater.svg?style=flat)](http://cocoapods.org/pods/TextFormater)
 [![License](https://img.shields.io/cocoapods/l/TextFormater.svg?style=flat)](http://cocoapods.org/pods/TextFormater)
 [![Platform](https://img.shields.io/cocoapods/p/TextFormater.svg?style=flat)](http://cocoapods.org/pods/TextFormater)
