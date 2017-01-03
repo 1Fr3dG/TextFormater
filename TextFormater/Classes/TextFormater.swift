@@ -94,6 +94,7 @@ public class TextFormater : NSObject {
     /// customized colors
     public private(set) var colors : [String : UIColor] = [
         "defaultColor" : UIColor.black,
+        "clear" : UIColor.clear,
         "black" : UIColor.black,
         "blue" : UIColor.blue,
         "brown" : UIColor.brown,
