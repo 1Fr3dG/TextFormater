@@ -9,7 +9,7 @@
 import UIKit
 import TextFormater
 
-class ViewController: UIViewController, UITextViewDelegate {
+class ViewController: UIViewController, UITextViewDelegate, GetImageForTextFormater {
     
     let textFormater = TextFormater()
     
@@ -21,6 +21,7 @@ class ViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         textResult.attributedText = textFormater.format(textCode.text)
+        textFormater.imageDelegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -30,6 +31,23 @@ class ViewController: UIViewController, UITextViewDelegate {
 
     func textViewDidChange(_ textView: UITextView) {
             textResult.attributedText = textFormater.format(textCode.text)
+    }
+    
+    func getImage(byKey: String) -> UIImage? {
+        switch byKey {
+        case "50":
+            return #imageLiteral(resourceName: "img50")
+        case "100":
+            return #imageLiteral(resourceName: "img100")
+        case "200":
+            return #imageLiteral(resourceName: "img200")
+        case "400":
+            return #imageLiteral(resourceName: "img400")
+        case "1600":
+            return #imageLiteral(resourceName: "img1600")
+        default:
+            return nil
+        }
     }
 }
 

@@ -14,6 +14,12 @@ import Foundation
     typealias UIColor = NSColor
 #endif
 
+/// 图片数据获取协议
+public protocol GetImageForTextFormater {
+    func getImage(byKey: String) -> UIImage?
+}
+
+
 /// 文本格式化器
 /// 将含有预定义格式化命令的 String 转化为 NSAttributedString
 public class TextFormater : NSObject {
@@ -26,6 +32,16 @@ public class TextFormater : NSObject {
     /// 动态格式前缀，将附加在所有格式文本之前，defaultFormat 之后
     /// 用于 traitCollectionDidChange 等情况调整格式化参数
     public var dynamicFormat: String = ""
+    
+    /// 图片获取代理用类
+    class NilImageDelegate: NSObject, GetImageForTextFormater {
+        func getImage(byKey: String) -> UIImage? {
+            return nil
+        }
+    }
+    
+    /// 图片获取代理
+    public var imageDelegate : GetImageForTextFormater = NilImageDelegate()
     
     /// 定制化字体
     public private(set) var fonts : [String : String] = [
@@ -83,7 +99,7 @@ public class TextFormater : NSObject {
         "b" : "ThemeFont",
         "i" : "ThemeFont",
         "fontsize" : "FontSizeAdjust",
-        
+        "img" : "Image",
     ]
     
     /// 增加格式化命令
@@ -214,6 +230,45 @@ public class TextFormater : NSObject {
                     
                 case "Comments":
                     break
+                
+                case "Image":
+                    let attachment = NSTextAttachment()
+                    if let _imgkey = parameter(in: _command, withKey: "key"),
+                        let _img = imageDelegate.getImage(byKey: _imgkey) {
+                        attachment.image = _img
+                        // image size
+                        var _width = _img.size.width
+                        var _height = _img.size.height
+                        if let _widthstring = parameter(in: _command, withKey: "width"),
+                            0 != (_widthstring as NSString).doubleValue {
+                            _width = CGFloat((_widthstring as NSString).doubleValue)
+                            _height = _img.size.height * _width / _img.size.width
+                        }
+                        if let _heightstring = parameter(in: _command, withKey: "height"),
+                            0 != (_heightstring as NSString).doubleValue {
+                            _height = CGFloat((_heightstring as NSString).doubleValue)
+                        }
+                        let currentFont: UIFont
+                        if let _font = lastAttr(in: attrs, with: NSFontAttributeName) as? UIFont{
+                            currentFont = _font
+                        } else {
+                            currentFont = UIFont(name: fonts["normalfont"]!, size: normalFontSize)!
+                        }
+                        attachment.bounds = CGRect(x: 0.0, y: currentFont.descender, width: _width, height: _height)
+                    }
+                    
+                    var _attrs = attrs
+                    _attrs.append((NSForegroundColorAttributeName, UIColor.clear))
+                    _attrs.append((NSFontAttributeName, UIFont(name: fonts["normalfont"]!, size: 1)!))
+                    _attrs.append((NSBackgroundColorAttributeName, UIColor.clear))
+                    
+                    var _attrDict: [String : Any] = [:]
+                    for (key, value) in _attrs {
+                        _attrDict[key] = value
+                    }
+                    _result.append(NSAttributedString(string: " ", attributes: _attrDict))
+                    _result.append(NSAttributedString(attachment: attachment))
+                    _result.append(NSAttributedString(string: " ", attributes: _attrDict))
                     
                 case "Font":
                     let oldfont: UIFont
