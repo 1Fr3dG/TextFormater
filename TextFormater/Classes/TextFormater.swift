@@ -15,25 +15,41 @@ import Foundation
 #endif
 
 /// 图片数据获取协议
+///
+/// delegation protocol for getting image data (as UIImage)
 public protocol GetImageForTextFormater {
     func getImage(byKey: String) -> UIImage?
 }
 
 
 /// 文本格式化器
-/// 将含有预定义格式化命令的 String 转化为 NSAttributedString
+///
+/// Text formater
+///
+/// - 将含有预定义格式化命令的 String 转化为 NSAttributedString
+/// - convert string with formatting command to NSAttributedString
 public class TextFormater : NSObject {
     /// 格式化命令控制字符
+    ///
+    /// Char used to seperate format command (from content)
     public var _cs = "<"
     public var _ce = ">"
     
     /// 缺省格式前缀, 将附加在所有格式文本之前
+    ///
+    /// default prefix, will be added to any string before formating
     public var defaultFormat: String = ""
     /// 动态格式前缀，将附加在所有格式文本之前，defaultFormat 之后
-    /// 用于 traitCollectionDidChange 等情况调整格式化参数
+    ///
+    /// Dynamic prefix, will be added to string, after defaultFormat
+    ///
+    /// - 用于 traitCollectionDidChange 等情况调整格式化参数
+    /// - deisgned to adjust format according changes like traitCollectionDidChange
     public var dynamicFormat: String = ""
     
     /// 图片获取代理用类
+    ///
+    /// Dummy class for image deletation
     class NilImageDelegate: NSObject, GetImageForTextFormater {
         func getImage(byKey: String) -> UIImage? {
             return nil
@@ -41,26 +57,41 @@ public class TextFormater : NSObject {
     }
     
     /// 图片获取代理
+    ///
+    /// deletate for image (used for img command)
     public var imageDelegate : GetImageForTextFormater = NilImageDelegate()
     
     /// 定制化字体
+    ///
+    /// custimized fonts
     public private(set) var fonts : [String : String] = [
         "normalfont" : UIFont.systemFont(ofSize: UIFont.systemFontSize).fontName,
         "boldfont" : UIFont.boldSystemFont(ofSize: UIFont.systemFontSize).fontName,
         "italicfont" : UIFont.boldSystemFont(ofSize: UIFont.systemFontSize).fontName,
         ]
     /// 设置定制化字体
-    /// - parameter name: 格式化命令名
-    /// - parameter font: 对应字体
+    ///
+    /// set customized font
+    ///
+    /// - parameter name: 
+    ///     - 格式化命令名
+    ///     - name of command
+    /// - parameter font: 
+    ///     - 对应字体
+    ///     - font (size ignored)
     public func setFont(name: String, font: UIFont) {
         fonts[name.lowercased()] = font.fontName
         setCommand(command: name.lowercased(), squance: "ThemeFont")
     }
     
     /// 标准字号
+    ///
+    /// default size of font
     public var normalFontSize: CGFloat = UIFont.systemFontSize
     
     /// 定制化颜色
+    ///
+    /// customized colors
     public private(set) var colors : [String : UIColor] = [
         "defaultColor" : UIColor.black,
         "black" : UIColor.black,
@@ -76,14 +107,22 @@ public class TextFormater : NSObject {
         "white" : UIColor.white,
     ]
     /// 设置定制化颜色
-    /// - parameter name: 格式化命令名，该命令只用于前景色；该颜色可用于 \<bgcolor name=colorname\> 命令
-    /// - parameter color: 对应颜色
+    ///
+    /// set customized color
+    /// - parameter name: 
+    ///     - 格式化命令名，该命令只用于前景色；该颜色可用于 `<bgcolor name=colorname>` 命令
+    ///     - color name and command, command can be used for **foreground**, color name can be used for both **foreground** and **background**
+    /// - parameter color: 
+    ///     - 对应颜色
+    ///     - UIColor
     public func setColor(name: String, color: UIColor) {
         colors[name.lowercased()] = color
         setCommand(command: name.lowercased(), squance: "ForegroundColor")
     }
     
     /// 命令序列
+    ///
+    /// commands
     public private(set) var commandSquance : [String : String] = [
         "/" : "End",
         "#" : "Comments",
@@ -103,6 +142,8 @@ public class TextFormater : NSObject {
     ]
     
     /// 增加格式化命令
+    ///
+    /// add new command to **commandSquance**
     private func setCommand(command: String, squance: String) {
         commandSquance[command] = squance
     }
@@ -141,6 +182,8 @@ public class TextFormater : NSObject {
     }
     
     /// 查找同属性历史命令
+    ///
+    /// find last attribute with same command type
     private func lastAttr(in attrs: [(String, Any)], with attrName: String) -> Any? {
         for (key, value) in attrs.reversed() {
             if key == attrName {
@@ -151,6 +194,8 @@ public class TextFormater : NSObject {
     }
     
     /// 查找命令参数
+    ///
+    /// filter parameters from command string
     private func parameter(in command: String, withKey key: String) -> String? {
         if let keyPosition = command.range(of: " " + key + "=") {
             let stringAfterKey = command.substring(from: keyPosition.upperBound)
@@ -165,6 +210,11 @@ public class TextFormater : NSObject {
     }
     
     /// 格式化字符串
+    ///
+    /// Format a string
+    /// - parameter text:
+    ///     - 带有格式化命令的字符串
+    ///     - String with formatting commands
     public func format(_ text: String?) -> NSAttributedString {
         let _text: String
         let _result = NSMutableAttributedString(string: "")
@@ -173,11 +223,13 @@ public class TextFormater : NSObject {
         let regular = try! NSRegularExpression(pattern: _controlSequancePattern, options: .useUnicodeWordBoundaries)
         
         // 添加附加格式设置
+        // add prefix
         if text == nil || text == "" {
             return _result
         } else {
             let _appendx = ""
             // 目前不要求强制关闭标签
+            // closer of command is NOT required
             //            for _ in regular.matches(in: KTTextFormater.defaultFormat + formatString, options: .reportProgress , range: NSMakeRange(0, (KTTextFormater.defaultFormat + formatString).characters.count)) {
             //                _appendx += _cs + _ce
             //            }
@@ -185,12 +237,14 @@ public class TextFormater : NSObject {
         }
         
         // 文本分段
+        // seperate string with commands
         var formatedLocation = 0
         var attrs: [(String, Any)] = []
         attrs.append((NSFontAttributeName, UIFont(name: fonts["normalfont"]!, size: normalFontSize) as Any))
         for result in regular.matches(in: _text, options: .reportProgress, range: NSMakeRange(0, _text.utf16.count)) {
             if formatedLocation < result.range.location {
                 // 本段为内容
+                // this section is content
                 let _t = (_text as NSString).substring(with: NSRange(location: formatedLocation, length: result.range.location - formatedLocation))
                 var _attrDict: [String : Any] = [:]
                 for (key, value) in attrs {
@@ -199,6 +253,7 @@ public class TextFormater : NSObject {
                 _result.append(NSAttributedString(string: _t, attributes: _attrDict))
             }
             // 本段为格式命令
+            // this section is formating command
             let _command = (_text as NSString).substring(with: result.range)
             
             let _commandName: String
