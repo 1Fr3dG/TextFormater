@@ -8,7 +8,7 @@ Convert a short string with formatting commands to attributed string. For used t
                        DESC
 
   s.homepage         = 'https://github.com/1fr3dg/TextFormater'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
+  s.screenshots      = 'https://github.com/1Fr3dG/TextFormater/blob/master/screen/example.png?raw=true'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Alfred Gao' => 'alfredg@alfredg.cn' }
   s.source           = { :git => 'https://github.com/1fr3dg/TextFormater.git', :tag => s.version.to_s }
