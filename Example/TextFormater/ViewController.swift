@@ -20,8 +20,9 @@ class ViewController: UIViewController, UITextViewDelegate, GetImageForTextForma
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        textResult.attributedText = textFormater.format(textCode.text)
         textFormater.imageDelegate = self
+        textCode.text = "<align to=right><color name=red>blue</> <fontsize +=5>small</> test </> <br><center><blue>-----</></> <br><center><img key=100 width =78.5></><br>"
+        textResult.attributedText = textFormater.format(textCode.text)
     }
 
     override func didReceiveMemoryWarning() {

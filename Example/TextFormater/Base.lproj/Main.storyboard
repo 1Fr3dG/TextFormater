@@ -30,7 +30,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="&lt;align to=center&gt;&lt;red&gt;blue&lt;/&gt; &lt;fontsize +=5&gt;small&lt;/&gt; test &lt;/&gt;&lt;br&gt;" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ZaM-Wj-JS1">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text=" " textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ZaM-Wj-JS1">
                                         <rect key="frame" x="0.0" y="318.5" width="343" height="308.5"/>
                                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                         <color key="textColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
