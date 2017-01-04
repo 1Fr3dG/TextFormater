@@ -10,8 +10,14 @@ import Foundation
     import UIKit
 #elseif os(OSX)
     import Cocoa
-    typealias UIFont = NSFont
-    typealias UIColor = NSColor
+    public typealias UIFont = NSFont
+    public typealias UIColor = NSColor
+    public typealias UIImage = NSImage
+    extension NSFont {
+        func withSize(_ size: CGFloat) -> NSFont {
+            return NSFont(name: self.fontName, size: size)!
+        }
+    }
 #endif
 
 /// 图片数据获取协议
@@ -64,11 +70,19 @@ public class TextFormater : NSObject {
     /// 定制化字体
     ///
     /// custimized fonts
+    #if os(iOS)
     public private(set) var fonts : [String : String] = [
         "normalfont" : UIFont.systemFont(ofSize: UIFont.systemFontSize).fontName,
         "boldfont" : UIFont.boldSystemFont(ofSize: UIFont.systemFontSize).fontName,
         "italicfont" : UIFont.boldSystemFont(ofSize: UIFont.systemFontSize).fontName,
         ]
+    #elseif os(OSX)
+    public private(set) var fonts : [String : String] = [
+        "normalfont" : NSFont.systemFont(ofSize: NSFont.systemFontSize()).fontName,
+        "boldfont" : NSFont.boldSystemFont(ofSize: NSFont.systemFontSize()).fontName,
+        "italicfont" : NSFont.boldSystemFont(ofSize: NSFont.systemFontSize()).fontName,
+        ]
+    #endif
     /// 设置定制化字体
     ///
     /// set customized font
@@ -87,8 +101,11 @@ public class TextFormater : NSObject {
     /// 标准字号
     ///
     /// default size of font
+    #if os(iOS)
     public var normalFontSize: CGFloat = UIFont.systemFontSize
-    
+    #elseif os(OSX)
+    public var normalFontSize: CGFloat = NSFont.systemFontSize()
+    #endif
     /// 定制化颜色
     ///
     /// customized colors
@@ -279,7 +296,11 @@ public class TextFormater : NSObject {
                     if let _font = lastAttr(in: attrs, with: NSFontAttributeName) as? UIFont{
                         currentfont = _font
                     } else {
+                        #if os(iOS)
                         currentfont = UIFont.systemFont(ofSize: UIFont.systemFontSize)
+                        #elseif os(OSX)
+                        currentfont = NSFont.systemFont(ofSize: NSFont.systemFontSize())
+                        #endif
                     }
                     let newLineFont = currentfont.withSize(currentfont.pointSize / 2)
                     _result.append(NSAttributedString(string: "\n", attributes: [NSFontAttributeName: newLineFont]))
@@ -291,7 +312,6 @@ public class TextFormater : NSObject {
                     let attachment = NSTextAttachment()
                     if let _imgkey = parameter(in: _command, withKey: "key"),
                         let _img = imageDelegate.getImage(byKey: _imgkey) {
-                        attachment.image = _img
                         // image size
                         var _width = _img.size.width
                         var _height = _img.size.height
@@ -310,9 +330,18 @@ public class TextFormater : NSObject {
                         } else {
                             currentFont = UIFont(name: fonts["normalfont"]!, size: normalFontSize)!
                         }
-                        attachment.bounds = CGRect(x: 0.0, y: currentFont.descender, width: _width, height: _height)
+                        // set the attachment
+                        #if os(iOS)
+                            attachment.image = _img
+                            attachment.bounds = CGRect(x: 0.0, y: currentFont.descender, width: _width, height: _height)
+                        #elseif os(OSX)
+                            //var imageRect:CGRect = CGRectMake(0, 0, _img.size.width, _img.size.height)
+                            let _imgResized = NSImage(cgImage: _img.cgImage(forProposedRect: nil, context: nil, hints: nil)!, size: NSSize(width: _width, height: _height))
+                            let cell = NSTextAttachmentCell(imageCell: _imgResized)
+                            attachment.attachmentCell = cell
+                        #endif
+                
                     }
-                    
                     var _attrs = attrs
                     _attrs.append((NSForegroundColorAttributeName, UIColor.clear))
                     _attrs.append((NSFontAttributeName, UIFont(name: fonts["normalfont"]!, size: 1)!))
@@ -331,7 +360,11 @@ public class TextFormater : NSObject {
                     if let _font = lastAttr(in: attrs, with: NSFontAttributeName) as? UIFont{
                         oldfont = _font
                     } else {
+                        #if os(iOS)
                         oldfont = UIFont.systemFont(ofSize: UIFont.systemFontSize)
+                        #elseif os(OSX)
+                        oldfont = UIFont.systemFont(ofSize: UIFont.systemFontSize())
+                        #endif
                     }
                     
                     let newfont: UIFont
@@ -385,7 +418,11 @@ public class TextFormater : NSObject {
                     attrs.append((NSFontAttributeName, newfont))
                     
                 case "ThemeFont":
+                    #if os(iOS)
                     let oldfontsize = (lastAttr(in: attrs, with: NSFontAttributeName) as? UIFont)?.pointSize ?? UIFont.systemFontSize
+                    #elseif os(OSX)
+                    let oldfontsize = (lastAttr(in: attrs, with: NSFontAttributeName) as? UIFont)?.pointSize ?? UIFont.systemFontSize()
+                    #endif
                     let newfontname: String
                     switch _commandName {
                     case "b":
@@ -437,7 +474,11 @@ public class TextFormater : NSObject {
                     if let _olds = lastAttr(in: attrs, with: NSParagraphStyleAttributeName) {
                         style.setParagraphStyle(_olds as! NSParagraphStyle)
                     } else {
+                        #if os(iOS)
                         style.setParagraphStyle(NSParagraphStyle.default)
+                        #elseif os(OSX)
+                        style.setParagraphStyle(NSParagraphStyle.default())
+                        #endif
                     }
                     
                     if _commandName == "align" {
