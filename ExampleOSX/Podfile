@@ -1,0 +1,5 @@
+use_frameworks!
+
+target 'ExampleOSX' do
+  pod 'TextFormater', :path => '../'
+end
