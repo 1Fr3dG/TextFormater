@@ -18,11 +18,18 @@ The example project can be used to test format commands.
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
+* iOS Demp App
+
 ![Example app](screen/example.png)
+
+* OSX Demo App
+
+![Example OSX app](screen/exampleOSX.png)
 
 ## Requirements
 
-* iOS 9.0+
+* iOS 9.0
+* OSX 10.12
 
 ## Installation
 
