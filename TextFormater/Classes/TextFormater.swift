@@ -241,7 +241,7 @@ public class TextFormater : NSObject {
     /// - parameter text:
     ///     - 带有格式化命令的字符串
     ///     - String with formatting commands
-    public func format(_ text: String?) -> NSAttributedString {
+    public func format(_ text: String?) -> NSAttributedString? {
         let _text: String
         let _result = NSMutableAttributedString(string: "")
         
@@ -250,7 +250,10 @@ public class TextFormater : NSObject {
         
         // 添加附加格式设置
         // add prefix
-        if text == nil || text == "" {
+        guard text != nil else {
+            return nil
+        }
+        if text == "" {
             return _result
         } else {
             let _appendx = ""
