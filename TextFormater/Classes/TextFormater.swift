@@ -52,6 +52,14 @@ public class TextFormater : NSObject {
     /// - 用于 traitCollectionDidChange 等情况调整格式化参数
     /// - deisgned to adjust format according changes like traitCollectionDidChange
     public var dynamicFormat: String = ""
+    /// 动态格式前缀代理，在**每次**`format`函数调用时调用该代理
+    ///
+    /// Dynamic prefix delegation, will be called during **every** `format` call
+    ///
+    /// 该值为 `nil` 时使用 `dynamicFormat`
+    ///
+    /// `format()` will use `dynamicFormat` when `dynamicFormatDelegate()` returns `nil`
+    public var dynamicFormatDelegate: () -> String? = {return nil}
     
     /// 图片获取代理用类
     ///
@@ -251,7 +259,8 @@ public class TextFormater : NSObject {
             //            for _ in regular.matches(in: KTTextFormater.defaultFormat + formatString, options: .reportProgress , range: NSMakeRange(0, (KTTextFormater.defaultFormat + formatString).characters.count)) {
             //                _appendx += _cs + _ce
             //            }
-            _text = defaultFormat + dynamicFormat + text! + _appendx + _cs + _ce
+            let _dynamicFormat = dynamicFormatDelegate() ?? dynamicFormat
+            _text = defaultFormat + _dynamicFormat + text! + _appendx + _cs + _ce
         }
         
         // 文本分段
