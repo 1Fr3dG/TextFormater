@@ -90,6 +90,13 @@ Following could be used to change the default behavior of textFormater
 * Dynamic prefix, will be added to string, after defaultFormat
 	* Deisgned to adjust format according changes like traitCollectionDidChange
 
+### dynamicFormatDelegate: () -> String?
+
+* 用于特别复杂的情况。由于每次 `format()` 该代理都会被调用，一般应使用 `dynamicFormat` 而尽量避免使用该代理。
+	* 代理返回 `nil` 时 `format()` 函数会自动使用 `dynamicFormat`
+* Used for special/complex situation. This delegate will be called **every** during every `format()` call, so normally you should use `dynamicFormat` instead of delegate for better performance.
+	* `format()` will use `dynamicFormat` when delegate returns `nil`  
+
 ### imageDelegate
 
 * 图片获取代理

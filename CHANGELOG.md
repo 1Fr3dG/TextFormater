@@ -7,6 +7,10 @@ a pod to convert String to NSAttributedString
 [![License](https://img.shields.io/cocoapods/l/TextFormater.svg?style=flat)](http://cocoapods.org/pods/TextFormater)
 [![Platform](https://img.shields.io/cocoapods/p/TextFormater.svg?style=flat)](http://cocoapods.org/pods/TextFormater)
 
+* add `dynamicFormatDelegate`
+
+## 1.1.1
+
 * add OSX screenshot
 
 ## 1.1.0
