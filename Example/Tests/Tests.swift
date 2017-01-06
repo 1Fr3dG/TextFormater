@@ -20,7 +20,7 @@ class Tests: XCTestCase {
     func testFormatWithBlankString() {
         let result = tester.format("")
         
-        XCTAssertEqual(0, result.length)
+        XCTAssertEqual(0, result?.length)
     }
     
     func testAddFont() {
