@@ -7,6 +7,10 @@ a pod to convert String to NSAttributedString
 [![License](https://img.shields.io/cocoapods/l/TextFormater.svg?style=flat)](http://cocoapods.org/pods/TextFormater)
 [![Platform](https://img.shields.io/cocoapods/p/TextFormater.svg?style=flat)](http://cocoapods.org/pods/TextFormater)
 
+* support spm
+
+## 1.1.3
+
 * `format(String?)` returns `NSAttributedString?` now. nil for nil.
 
 ## 1.1.2

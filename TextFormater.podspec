@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'TextFormater'
-  s.version          = '1.1.3'
+  s.version          = '1.1.5'
   s.summary          = 'Convert String to NSAttributedString'
 
   s.description      = <<-DESC
@@ -16,6 +16,6 @@ Convert a short string with formatting commands to attributed string. For used t
   s.ios.deployment_target = '9.0'
   s.osx.deployment_target = '10.12'
 
-  s.source_files = 'TextFormater/Classes/**/*'
+  s.source_files = 'Sources/*'
 
 end

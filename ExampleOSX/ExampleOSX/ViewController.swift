@@ -22,7 +22,7 @@ class ViewController: NSViewController, GetImageForTextFormater {
         textFormater.imageDelegate = self
         textCode.title = "<align to=right><color name=red>blue</> <fontsize +=5>small</> test </> <br><center><blue>-----</></> <br><center><img key=100 width=78.5></><br>"
         
-        textResult.textStorage?.setAttributedString(textFormater.format(textCode.title))
+        textResult.textStorage?.setAttributedString(textFormater.format(textCode.title)!)
     }
 
     override var representedObject: Any? {
@@ -32,7 +32,7 @@ class ViewController: NSViewController, GetImageForTextFormater {
     }
 
     @IBAction func textChanged(_ sender: Any) {
-        textResult.textStorage?.setAttributedString(textFormater.format(textCode.title))
+        textResult.textStorage?.setAttributedString(textFormater.format(textCode.title)!)
     }
     
     func getImage(byKey: String) -> NSImage? {
