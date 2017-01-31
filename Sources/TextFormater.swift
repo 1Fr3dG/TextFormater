@@ -300,7 +300,9 @@ public class TextFormater : NSObject {
             if let _sq = commandSquance[_commandName] {
                 switch _sq {
                 case "End":
-                    attrs.removeLast()
+                    if attrs.count > 0 {
+                        attrs.removeLast()
+                    }
                     
                 case "NewLine":
                     _result.append(NSAttributedString(string: "\n"))
