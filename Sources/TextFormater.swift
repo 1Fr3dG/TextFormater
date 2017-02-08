@@ -334,7 +334,7 @@ public class TextFormater : NSObject {
                             if imgHeight != 0 {
                                 _height = imgHeight
                             } else {
-                                _height = imgHeight * _img.size.height / _img.size.width
+                                _height = imgWidth * _img.size.height / _img.size.width
                             }
                         }
                         // calculate display size
