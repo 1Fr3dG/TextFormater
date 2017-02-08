@@ -343,7 +343,7 @@ public class TextFormater : NSObject {
                         if let _widthstring = parameter(in: _command, withKey: "width"),
                             0 != (_widthstring as NSString).doubleValue {
                             if _widthstring.contains("%") {
-                                width = _width * 100 / CGFloat((_widthstring as NSString).doubleValue)
+                                width = _width * CGFloat((_widthstring as NSString).doubleValue) / 100
                             } else {
                                 width = CGFloat((_widthstring as NSString).doubleValue)
                                 height = _height * width / _width
@@ -352,7 +352,7 @@ public class TextFormater : NSObject {
                             if let _heightstring = parameter(in: _command, withKey: "height"),
                                 0 != (_heightstring as NSString).doubleValue {
                                 if _heightstring.contains("%") {
-                                    height = _height * 100 / CGFloat((_heightstring as NSString).doubleValue)
+                                    height = _height * CGFloat((_heightstring as NSString).doubleValue) / 100
                                 } else {
                                     height = CGFloat((_heightstring as NSString).doubleValue)
                                 }
