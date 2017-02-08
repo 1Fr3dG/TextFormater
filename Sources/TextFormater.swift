@@ -344,6 +344,7 @@ public class TextFormater : NSObject {
                             0 != (_widthstring as NSString).doubleValue {
                             if _widthstring.contains("%") {
                                 width = _width * CGFloat((_widthstring as NSString).doubleValue) / 100
+                                height = _height * CGFloat((_widthstring as NSString).doubleValue) / 100
                             } else {
                                 width = CGFloat((_widthstring as NSString).doubleValue)
                                 height = _height * width / _width
