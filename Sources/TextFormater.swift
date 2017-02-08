@@ -241,7 +241,7 @@ public class TextFormater : NSObject {
     /// - parameter text:
     ///     - 带有格式化命令的字符串
     ///     - String with formatting commands
-    public func format(_ text: String?) -> NSAttributedString? {
+    public func format(_ text: String?, imgWidth: CGFloat = 0, imgHeight: CGFloat = 0 ) -> NSAttributedString? {
         let _text: String
         let _result = NSMutableAttributedString(string: "")
         
@@ -326,31 +326,52 @@ public class TextFormater : NSObject {
                     let attachment = NSTextAttachment()
                     if let _imgkey = parameter(in: _command, withKey: "key"),
                         let _img = imageDelegate.getImage(byKey: _imgkey) {
-                        // image size
+                        // image base size
                         var _width = _img.size.width
                         var _height = _img.size.height
+                        if imgWidth != 0 {
+                            _width = imgWidth
+                            if imgHeight != 0 {
+                                _height = imgHeight
+                            } else {
+                                _height = imgHeight * _img.size.height / _img.size.width
+                            }
+                        }
+                        // calculate display size
+                        var width: CGFloat = _width
+                        var height: CGFloat = _height
                         if let _widthstring = parameter(in: _command, withKey: "width"),
                             0 != (_widthstring as NSString).doubleValue {
-                            _width = CGFloat((_widthstring as NSString).doubleValue)
-                            _height = _img.size.height * _width / _img.size.width
+                            if _widthstring.contains("%") {
+                                width = _width * 100 / CGFloat((_widthstring as NSString).doubleValue)
+                            } else {
+                                width = CGFloat((_widthstring as NSString).doubleValue)
+                                height = _height * width / _width
+                            }
+                            
+                            if let _heightstring = parameter(in: _command, withKey: "height"),
+                                0 != (_heightstring as NSString).doubleValue {
+                                if _heightstring.contains("%") {
+                                    height = _height * 100 / CGFloat((_heightstring as NSString).doubleValue)
+                                } else {
+                                    height = CGFloat((_heightstring as NSString).doubleValue)
+                                }
+                            }
                         }
-                        if let _heightstring = parameter(in: _command, withKey: "height"),
-                            0 != (_heightstring as NSString).doubleValue {
-                            _height = CGFloat((_heightstring as NSString).doubleValue)
-                        }
+                        
+                        // set the attachment
                         let currentFont: UIFont
                         if let _font = lastAttr(in: attrs, with: NSFontAttributeName) as? UIFont{
                             currentFont = _font
                         } else {
                             currentFont = UIFont(name: fonts["normalfont"]!, size: normalFontSize)!
                         }
-                        // set the attachment
                         #if os(iOS)
                             attachment.image = _img
-                            attachment.bounds = CGRect(x: 0.0, y: currentFont.descender, width: _width, height: _height)
+                            attachment.bounds = CGRect(x: 0.0, y: currentFont.descender, width: width, height: height)
                         #elseif os(OSX)
                             //var imageRect:CGRect = CGRectMake(0, 0, _img.size.width, _img.size.height)
-                            let _imgResized = NSImage(cgImage: _img.cgImage(forProposedRect: nil, context: nil, hints: nil)!, size: NSSize(width: _width, height: _height))
+                            let _imgResized = NSImage(cgImage: _img.cgImage(forProposedRect: nil, context: nil, hints: nil)!, size: NSSize(width: width, height: height))
                             let cell = NSTextAttachmentCell(imageCell: _imgResized)
                             attachment.attachmentCell = cell
                         #endif

@@ -163,12 +163,16 @@ Insert an image. No closure (`</>`) to this command.
 * key: String
 	* 用于从 `imageDelegate.getImage(byKey: key)` 获取图像
 	* Used to get image by `imageDelegate.getImage(byKey: key)`
-* width: CGFloat
-	* 设为0则使用图像原始宽高，`height`将被忽略
+* width: CGFloat / Persentage
+	* 不设置或设为0则使用图像原始宽高，`height`将被忽略
 	* Use image.size if set width to 0, note height will be ignored
+	* 百分比使用 `format()` 函数的 `imgWidth` 参数作为全宽，缺省值 `imgWidth=0` 使用图片原始宽度
+	* Persentage use `imgWidth` of function `format()` as 100% width. Default value `imgWidth = 0` will use image file width
 * height: CGFloat
 	* 不设置`height`则按照`width`进行等比缩放
 	* With `height` not setted, image will be aspect resized by `width`
+	* 百分比使用 `format()` 函数的 `imgHeight` 参数作为全高，缺省值 `imgHeight=0` 使用图片原始高度
+	* Persentage use `img Height` of function `format()` as 100% height. Default value `imgHeight = 0` will use image file height  
 
 ### `<align to=left|center|right>`
 #### 快捷命令-Shotcut: `<left>``<center>``<right>`
