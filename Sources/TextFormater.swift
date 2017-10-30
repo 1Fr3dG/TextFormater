@@ -86,9 +86,9 @@ public class TextFormater : NSObject {
         ]
     #elseif os(OSX)
     public private(set) var fonts : [String : String] = [
-        "normalfont" : NSFont.systemFont(ofSize: NSFont.systemFontSize()).fontName,
-        "boldfont" : NSFont.boldSystemFont(ofSize: NSFont.systemFontSize()).fontName,
-        "italicfont" : NSFont.boldSystemFont(ofSize: NSFont.systemFontSize()).fontName,
+        "normalfont" : NSFont.systemFont(ofSize: NSFont.systemFontSize).fontName,
+        "boldfont" : NSFont.boldSystemFont(ofSize: NSFont.systemFontSize).fontName,
+        "italicfont" : NSFont.boldSystemFont(ofSize: NSFont.systemFontSize).fontName,
         ]
     #endif
     /// 设置定制化字体
@@ -112,7 +112,7 @@ public class TextFormater : NSObject {
     #if os(iOS)
     public var normalFontSize: CGFloat = UIFont.systemFontSize
     #elseif os(OSX)
-    public var normalFontSize: CGFloat = NSFont.systemFontSize()
+    public var normalFontSize: CGFloat = NSFont.systemFontSize
     #endif
     /// 定制化颜色
     ///
@@ -313,7 +313,7 @@ public class TextFormater : NSObject {
                         #if os(iOS)
                         currentfont = UIFont.systemFont(ofSize: UIFont.systemFontSize)
                         #elseif os(OSX)
-                        currentfont = NSFont.systemFont(ofSize: NSFont.systemFontSize())
+                        currentfont = NSFont.systemFont(ofSize: NSFont.systemFontSize)
                         #endif
                     }
                     let newLineFont = currentfont.withSize(currentfont.pointSize / 2)
@@ -399,7 +399,7 @@ public class TextFormater : NSObject {
                         #if os(iOS)
                         oldfont = UIFont.systemFont(ofSize: UIFont.systemFontSize)
                         #elseif os(OSX)
-                        oldfont = UIFont.systemFont(ofSize: UIFont.systemFontSize())
+                        oldfont = UIFont.systemFont(ofSize: UIFont.systemFontSize)
                         #endif
                     }
                     
@@ -457,7 +457,7 @@ public class TextFormater : NSObject {
                     #if os(iOS)
                     let oldfontsize = (lastAttr(in: attrs, with: NSAttributedStringKey.font.rawValue) as? UIFont)?.pointSize ?? UIFont.systemFontSize
                     #elseif os(OSX)
-                    let oldfontsize = (lastAttr(in: attrs, with: NSFontAttributeName) as? UIFont)?.pointSize ?? UIFont.systemFontSize()
+                        let oldfontsize = (lastAttr(in: attrs, with: NSAttributedStringKey.font.rawValue) as? UIFont)?.pointSize ?? UIFont.systemFontSize
                     #endif
                     let newfontname: String
                     switch _commandName {
@@ -513,7 +513,7 @@ public class TextFormater : NSObject {
                         #if os(iOS)
                         style.setParagraphStyle(NSParagraphStyle.default)
                         #elseif os(OSX)
-                        style.setParagraphStyle(NSParagraphStyle.default())
+                            style.setParagraphStyle(NSParagraphStyle.default)
                         #endif
                     }
                     

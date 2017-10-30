@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'TextFormater'
-  s.version          = '1.4.0'
+  s.version          = '1.4.1'
   s.summary          = 'Convert String to NSAttributedString'
 
   s.description      = <<-DESC
@@ -14,7 +14,7 @@ Convert a short string with formatting commands to attributed string. For used t
   s.source           = { :git => 'https://github.com/1fr3dg/TextFormater.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '9.0'
-  #s.osx.deployment_target = '10.12'
+  s.osx.deployment_target = '10.12'
 
   s.source_files = 'Sources/*'
 
