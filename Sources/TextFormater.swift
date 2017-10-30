@@ -224,11 +224,11 @@ public class TextFormater : NSObject {
     /// filter parameters from command string
     private func parameter(in command: String, withKey key: String) -> String? {
         if let keyPosition = command.range(of: " " + key + "=") {
-            let stringAfterKey = command.substring(from: keyPosition.upperBound)
+            let stringAfterKey = command[keyPosition.upperBound...]
             if let valueEndPosition = stringAfterKey.range(of: " ") {
-                return stringAfterKey.substring(to: valueEndPosition.lowerBound)
+                return String(stringAfterKey[..<valueEndPosition.lowerBound])
             } else {
-                return stringAfterKey.substring(to: stringAfterKey.index(stringAfterKey.endIndex, offsetBy: -1))
+                return String(stringAfterKey[..<stringAfterKey.index(stringAfterKey.endIndex, offsetBy: -1)])
             }
         } else {
             return nil
@@ -270,15 +270,15 @@ public class TextFormater : NSObject {
         // seperate string with commands
         var formatedLocation = 0
         var attrs: [(String, Any)] = []
-        attrs.append((NSFontAttributeName, UIFont(name: fonts["normalfont"]!, size: normalFontSize) as Any))
+        attrs.append((NSAttributedStringKey.font.rawValue, UIFont(name: fonts["normalfont"]!, size: normalFontSize) as Any))
         for result in regular.matches(in: _text, options: .reportProgress, range: NSMakeRange(0, _text.utf16.count)) {
             if formatedLocation < result.range.location {
                 // 本段为内容
                 // this section is content
                 let _t = (_text as NSString).substring(with: NSRange(location: formatedLocation, length: result.range.location - formatedLocation))
-                var _attrDict: [String : Any] = [:]
+                var _attrDict: [NSAttributedStringKey : Any] = [:]
                 for (key, value) in attrs {
-                    _attrDict[key] = value
+                    _attrDict[NSAttributedStringKey(rawValue: key)] = value
                 }
                 _result.append(NSAttributedString(string: _t, attributes: _attrDict))
             }
@@ -291,9 +291,9 @@ public class TextFormater : NSObject {
                 _commandName = "NOACTION".lowercased()
             } else {
                 if let spaceposition = _command.range(of: " ") {
-                    _commandName = _command.substring(with: _command.index(_command.startIndex, offsetBy: 1) ..< spaceposition.lowerBound).lowercased()
+                    _commandName = _command[_command.index(_command.startIndex, offsetBy: 1) ..< spaceposition.lowerBound].lowercased()
                 } else {
-                    _commandName = _command.substring(with: _command.index(_command.startIndex, offsetBy: 1) ..< _command.index(_command.endIndex, offsetBy: -1)).lowercased()
+                    _commandName = _command[_command.index(_command.startIndex, offsetBy: 1) ..< _command.index(_command.endIndex, offsetBy: -1)].lowercased()
                 }
             }
             
@@ -307,7 +307,7 @@ public class TextFormater : NSObject {
                 case "NewLine":
                     _result.append(NSAttributedString(string: "\n"))
                     let currentfont: UIFont
-                    if let _font = lastAttr(in: attrs, with: NSFontAttributeName) as? UIFont{
+                    if let _font = lastAttr(in: attrs, with: NSAttributedStringKey.font.rawValue) as? UIFont{
                         currentfont = _font
                     } else {
                         #if os(iOS)
@@ -317,7 +317,7 @@ public class TextFormater : NSObject {
                         #endif
                     }
                     let newLineFont = currentfont.withSize(currentfont.pointSize / 2)
-                    _result.append(NSAttributedString(string: "\n", attributes: [NSFontAttributeName: newLineFont]))
+                    _result.append(NSAttributedString(string: "\n", attributes: [NSAttributedStringKey.font: newLineFont]))
                     
                 case "Comments":
                     break
@@ -362,7 +362,7 @@ public class TextFormater : NSObject {
                         
                         // set the attachment
                         let currentFont: UIFont
-                        if let _font = lastAttr(in: attrs, with: NSFontAttributeName) as? UIFont{
+                        if let _font = lastAttr(in: attrs, with: NSAttributedStringKey.font.rawValue) as? UIFont{
                             currentFont = _font
                         } else {
                             currentFont = UIFont(name: fonts["normalfont"]!, size: normalFontSize)!
@@ -379,13 +379,13 @@ public class TextFormater : NSObject {
                 
                     }
                     var _attrs = attrs
-                    _attrs.append((NSForegroundColorAttributeName, UIColor.clear))
-                    _attrs.append((NSFontAttributeName, UIFont(name: fonts["normalfont"]!, size: 1)!))
-                    _attrs.append((NSBackgroundColorAttributeName, UIColor.clear))
+                    _attrs.append((NSAttributedStringKey.foregroundColor.rawValue, UIColor.clear))
+                    _attrs.append((NSAttributedStringKey.font.rawValue, UIFont(name: fonts["normalfont"]!, size: 1)!))
+                    _attrs.append((NSAttributedStringKey.backgroundColor.rawValue, UIColor.clear))
                     
-                    var _attrDict: [String : Any] = [:]
+                    var _attrDict: [NSAttributedStringKey : Any] = [:]
                     for (key, value) in _attrs {
-                        _attrDict[key] = value
+                        _attrDict[NSAttributedStringKey(rawValue: key)] = value
                     }
                     _result.append(NSAttributedString(string: " ", attributes: _attrDict))
                     _result.append(NSAttributedString(attachment: attachment))
@@ -393,7 +393,7 @@ public class TextFormater : NSObject {
                     
                 case "Font":
                     let oldfont: UIFont
-                    if let _font = lastAttr(in: attrs, with: NSFontAttributeName) as? UIFont{
+                    if let _font = lastAttr(in: attrs, with: NSAttributedStringKey.font.rawValue) as? UIFont{
                         oldfont = _font
                     } else {
                         #if os(iOS)
@@ -407,7 +407,7 @@ public class TextFormater : NSObject {
                     if let fontName = parameter(in: _command, withKey: "name") {
                         if let fontSize = parameter(in: _command, withKey: "size") {
                             if let _fontsize = NumberFormatter().number(from: fontSize) {
-                                newfont = UIFont(name: fontName, size: CGFloat(_fontsize))!
+                                newfont = UIFont(name: fontName, size: CGFloat(truncating: _fontsize))!
                             } else {
                                 newfont = UIFont(name: fontName, size: oldfont.pointSize)!
                             }
@@ -417,7 +417,7 @@ public class TextFormater : NSObject {
                     } else {
                         if let fontSize = parameter(in: _command, withKey: "size") {
                             if let _fontsize = NumberFormatter().number(from: fontSize) {
-                                newfont = UIFont(name: oldfont.fontName, size: CGFloat(_fontsize))!
+                                newfont = UIFont(name: oldfont.fontName, size: CGFloat(truncating: _fontsize))!
                             } else {
                                 newfont = oldfont
                             }
@@ -426,11 +426,11 @@ public class TextFormater : NSObject {
                         }
                     }
                     
-                    attrs.append((NSFontAttributeName, newfont))
+                    attrs.append((NSAttributedStringKey.font.rawValue, newfont))
                     
                 case "FontSizeAdjust":
                     let oldfont: UIFont
-                    if let _font = lastAttr(in: attrs, with: NSFontAttributeName) as? UIFont{
+                    if let _font = lastAttr(in: attrs, with: NSAttributedStringKey.font.rawValue) as? UIFont{
                         oldfont = _font
                     } else {
                         oldfont = UIFont(name: fonts["normalfont"]!, size: normalFontSize)!
@@ -451,11 +451,11 @@ public class TextFormater : NSObject {
                         newfont = oldfont.withSize(oldfont.pointSize + _fontsizeadjust)
                     }
                     
-                    attrs.append((NSFontAttributeName, newfont))
+                    attrs.append((NSAttributedStringKey.font.rawValue, newfont))
                     
                 case "ThemeFont":
                     #if os(iOS)
-                    let oldfontsize = (lastAttr(in: attrs, with: NSFontAttributeName) as? UIFont)?.pointSize ?? UIFont.systemFontSize
+                    let oldfontsize = (lastAttr(in: attrs, with: NSAttributedStringKey.font.rawValue) as? UIFont)?.pointSize ?? UIFont.systemFontSize
                     #elseif os(OSX)
                     let oldfontsize = (lastAttr(in: attrs, with: NSFontAttributeName) as? UIFont)?.pointSize ?? UIFont.systemFontSize()
                     #endif
@@ -474,7 +474,7 @@ public class TextFormater : NSObject {
                     }
                     
                     if let newfont = UIFont(name: newfontname, size: oldfontsize) {
-                        attrs.append((NSFontAttributeName, newfont))
+                        attrs.append((NSAttributedStringKey.font.rawValue, newfont))
                     }
                     
                 case "ForegroundColor":
@@ -492,7 +492,7 @@ public class TextFormater : NSObject {
                         }
                     }
                     
-                    attrs.append((NSForegroundColorAttributeName, newcolor))
+                    attrs.append((NSAttributedStringKey.foregroundColor.rawValue, newcolor))
                     
                 case "BackgroundColor":
                     var newcolor = UIColor.black
@@ -503,11 +503,11 @@ public class TextFormater : NSObject {
                         //TODO: 设置 rbg 颜色
                     }
                     
-                    attrs.append((NSBackgroundColorAttributeName, newcolor))
+                    attrs.append((NSAttributedStringKey.backgroundColor.rawValue, newcolor))
                     
                 case "Alignment":
                     let style = NSMutableParagraphStyle()
-                    if let _olds = lastAttr(in: attrs, with: NSParagraphStyleAttributeName) {
+                    if let _olds = lastAttr(in: attrs, with: NSAttributedStringKey.paragraphStyle.rawValue) {
                         style.setParagraphStyle(_olds as! NSParagraphStyle)
                     } else {
                         #if os(iOS)
@@ -542,7 +542,7 @@ public class TextFormater : NSObject {
                             break
                         }
                     }
-                    attrs.append((NSParagraphStyleAttributeName, style))
+                    attrs.append((NSAttributedStringKey.paragraphStyle.rawValue, style))
                     
                 default:
                     // should not put actions here
