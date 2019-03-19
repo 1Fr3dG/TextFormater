@@ -2,27 +2,27 @@
 //  ViewController.swift
 //  ExampleOSX
 //
-//  Created by Alfred Gao on 2017/1/4.
-//  Copyright © 2017年 Alfred Gao. All rights reserved.
+//  Created by 高宇 on 2019/3/14.
+//  Copyright © 2019 高宇. All rights reserved.
 //
 
 import Cocoa
 import TextFormater
 
-class ViewController: NSViewController, GetImageForTextFormater {
+class ViewController: NSViewController {
+
+    @IBOutlet weak var labelFormatResult: NSTextField!
+    @IBOutlet weak var textMarkupString: NSTextField!
     
     let textFormater = TextFormater()
     
-    @IBOutlet var textResult: NSTextView!
-    @IBOutlet weak var textCode: NSTextFieldCell!
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        textFormater.imageDelegate = self
-        textCode.title = "<align to=right><color name=red>blue</> <fontsize +=5>small</> test </> <br><center><blue>-----</></> <br><center><img key=100 width=78.5></><br>"
         
-        textResult.textStorage?.setAttributedString(textFormater.format(textCode.title)!)
+        textMarkupString.stringValue = "Enter markup text here"
+        labelFormatResult.attributedStringValue = textFormater.parse("Result here will be")
     }
 
     override var representedObject: Any? {
@@ -31,26 +31,10 @@ class ViewController: NSViewController, GetImageForTextFormater {
         }
     }
 
-    @IBAction func textChanged(_ sender: Any) {
-        textResult.textStorage?.setAttributedString(textFormater.format(textCode.title)!)
+    @IBAction func textboxMarkupStringChanged(_ sender: Any) {
+        labelFormatResult.attributedStringValue = textFormater.parse(textMarkupString.stringValue)
+        
     }
     
-    func getImage(byKey: String) -> NSImage? {
-        switch byKey {
-        case "50":
-            return #imageLiteral(resourceName: "img50")
-        case "100":
-            return #imageLiteral(resourceName: "img100")
-        case "200":
-            return #imageLiteral(resourceName: "img200")
-        case "400":
-            return #imageLiteral(resourceName: "img400")
-        case "1600":
-            return #imageLiteral(resourceName: "img1600")
-        default:
-            return nil
-        }
-    }
-
 }
 

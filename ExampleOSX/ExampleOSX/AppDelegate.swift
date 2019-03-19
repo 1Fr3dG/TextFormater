@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  ExampleOSX
 //
-//  Created by Alfred Gao on 2017/1/4.
-//  Copyright © 2017年 Alfred Gao. All rights reserved.
+//  Created by 高宇 on 2019/3/14.
+//  Copyright © 2019 高宇. All rights reserved.
 //
 
 import Cocoa

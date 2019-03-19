@@ -1,11 +1,8 @@
+platform :ios, '12.0'
 use_frameworks!
 
-target 'TextFormater_Example' do
+target 'Example' do
+  pod 'iosMath', :git => 'https://github.com/kostub/iosMath.git'
   pod 'TextFormater', :path => '../'
-
-  target 'TextFormater_Tests' do
-    inherit! :search_paths
-
-    
-  end
+  pod 'IQKeyboardManagerSwift'
 end

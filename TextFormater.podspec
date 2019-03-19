@@ -1,10 +1,10 @@
 Pod::Spec.new do |s|
   s.name             = 'TextFormater'
-  s.version          = '1.4.1'
-  s.summary          = 'Convert String to NSAttributedString'
+  s.version          = '2.0.0'
+  s.summary          = 'Convert Markup String to NSAttributedString'
 
   s.description      = <<-DESC
-Convert a short string with formatting commands to attributed string. For used to format label or button.
+Convert a short string with formatting commands to attributed string. For used to format label or button, or display a short paragraph with equation.
                        DESC
 
   s.homepage         = 'https://github.com/1fr3dg/TextFormater'
@@ -13,9 +13,14 @@ Convert a short string with formatting commands to attributed string. For used t
   s.author           = { 'Alfred Gao' => 'alfredg@alfredg.cn' }
   s.source           = { :git => 'https://github.com/1fr3dg/TextFormater.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '9.0'
-  s.osx.deployment_target = '10.12'
+  s.ios.deployment_target = '11.0'
+  s.osx.deployment_target = '10.13'
 
   s.source_files = 'Sources/*'
+  s.swift_version = '4.2'
+  
+  s.dependency 'iosMath'
+  s.dependency 'MarkdownKit'
+
 
 end

@@ -1,5 +1,7 @@
+platform :osx, '10.13'
 use_frameworks!
 
 target 'ExampleOSX' do
+  pod 'iosMath', :git => 'https://github.com/kostub/iosMath.git'
   pod 'TextFormater', :path => '../'
 end
