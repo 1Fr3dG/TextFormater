@@ -10,6 +10,11 @@ a pod to convert String to NSAttributedString
 
 Convert a string with format commands to NSAttributedString. This is designed for Label\Button\small TextView. `NSAttributedString.init(html:documentAttributes:)` should be better choice for a big page.
 
+## Thanks
+新版实现基于[MarkdownKit](https://cocoapods.org/pods/MarkdownKit)和[iosMath](https://cocoapods.org/pods/iosMath)实现
+
+New 2.0 version is built based on [MarkdownKit](https://cocoapods.org/pods/MarkdownKit) and [iosMath](https://cocoapods.org/pods/iosMath)
+
 ## Example
 
 可以运行样例 app 来测试不同格式命令的效果。
@@ -28,8 +33,8 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Requirements
 
-* iOS 9.0
-* OSX 10.12
+* iOS 11.0
+* OSX 10.13
 
 ## Installation
 
@@ -38,7 +43,12 @@ TextFormater 可通过[CocoaPods](http://cocoapods.org)安装：
 TextFormater is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
+**注意** iosMath 需要最新版，可使用github版本
+
+**Note** New version of iosMath is required
+
 ```ruby
+pod 'iosMath', :git => 'https://github.com/kostub/iosMath.git'
 pod "TextFormater"
 ```
 
@@ -68,80 +78,45 @@ textFormater.imageDelegate = self
 * Format string by it
 
 ```swift
-textResult.attributedText = textFormater.format(textCode.text)
+textResult.attributedText = textFormater.parse(textCode.text)
 ```
 
 ## Customization - 定制化
 
-以下属性和方法用于改变格式化器的行为
+在创建对象时可设置字体
 
-Following could be used to change the default behavior of textFormater
+It is recommanded to customize fonts during init()
 
-### defaultFormat
-
-* 缺省格式前缀, 将附加在所有格式文本之前
-
-* Default prefix, will be added to any string before formating
-
-### dynamicFormat
-
-* 动态格式前缀，将附加在所有格式文本之前，defaultFormat 之后
-	* 用于 traitCollectionDidChange 等情况调整格式化参数
-* Dynamic prefix, will be added to string, after defaultFormat
-	* Deisgned to adjust format according changes like traitCollectionDidChange
-
-### dynamicFormatDelegate: () -> String?
-
-* 用于特别复杂的情况。由于每次 `format()` 该代理都会被调用，一般应使用 `dynamicFormat` 而尽量避免使用该代理。
-	* 代理返回 `nil` 时 `format()` 函数会自动使用 `dynamicFormat`
-* Used for special/complex situation. This delegate will be called **every** during every `format()` call, so normally you should use `dynamicFormat` instead of delegate for better performance.
-	* `format()` will use `dynamicFormat` when delegate returns `nil`  
+```swift
+public init(fontFamilies:[String] = ["Verdana","苹方-简"],
+                fontSize:CGFloat = 0,
+                color:MarkdownColor = MarkdownParser.defaultColor,
+                boldFontFamilies:[String] = ["Didot","Hei"],
+                boldFontSize:CGFloat = 0,
+                boldFontColor:MarkdownColor = MarkdownParser.defaultColor,
+                italicFontFamilies:[String] = ["Times New Roman","Kai"],
+                italicFontSize:CGFloat = 0,
+                italicFontColor:MarkdownColor = MarkdownParser.defaultColor,
+                equationFontSize:CGFloat = 0,
+                equationColor:MarkdownColor = MarkdownParser.defaultColor,
+                imageDelegate:GetImageForTextFormater = NilImageDelegate()
+        )
+```
 
 ### imageDelegate
 
-* 图片获取代理
-* Deletate for image (used for img command)
+* 必须提供图片获取代理
+* Must provide deletater for image (used for img command)
 
-### func setFont(name: String, font: UIFont)
 
-* 设置定制化字体
-* set customized font
-
-### normalFontSize
-
-* 标准字号
-* Default size of font
-
-### func setColor(name: String, color: UIColor)
-
-* 设置定制化颜色
-* set customized color
 
 
 ## Commands - 格式命令
 
-### 断字符 - enclosure
-格式化命令用`<>`包含，如有必要可修改`_cs``_ce`来更换断字符。
+### 命令嵌套 - nest
+不支持同一命令嵌套使用
 
-Format command was enclosed by `<>`. Which can be changed to other character by set member `_cs``_ce`.
-
-### 参数 - parameter
-参数名和数值用`=`连接，不能有空格，引号不起作用
-
-Parameter key and value combined with `=`, without any space.
-
-### 作用域 - scope
-命令的效果可以叠加
-
-Scope of commands can be overlapped.
-
-### 命令结束 - end of a command
-`</>`命令用于结束前一个效果
-
-Use `</>` to end the effect of a command
-
-* 并不要求所以效果命令用`</>`配对，字符串分析达到结尾时结束。
-* It is NOT required to enclose every command with `</>`.
+It is not supported to nest same command
 
 ---
 
@@ -150,93 +125,37 @@ Use `</>` to end the effect of a command
 
 New line. No closure (`</>`) to this command.
 
-### `</>`
-命令效果结束。
+### `<img>key</img>`
+插入图片。
 
-End of last command effect.
+Insert an image. 
 
-### `<img key= width= height= >`
-插入图片。该命令不需要结束 (`</>`)。
+### `<center>.*</center>`
 
-Insert an image. No closure (`</>`) to this command.
+居中。自动在首尾增加两个换行(`\n`)
 
-* key: String
-	* 用于从 `imageDelegate.getImage(byKey: key)` 获取图像
-	* Used to get image by `imageDelegate.getImage(byKey: key)`
-* width: CGFloat / Persentage
-	* 不设置或设为0则使用图像原始宽高，`height`将被忽略
-	* Use image.size if set width to 0, note height will be ignored
-	* 百分比使用 `format()` 函数的 `imgWidth` 参数作为全宽，缺省值 `imgWidth=0` 使用图片原始宽度
-	* Persentage use `imgWidth` of function `format()` as 100% width. Default value `imgWidth = 0` will use image file width
-* height: CGFloat
-	* 不设置`height`则按照`width`进行等比缩放
-	* With `height` not setted, image will be aspect resized by `width`
-	* 百分比使用 `format()` 函数的 `imgHeight` 参数作为全高，缺省值 `imgHeight=0` 使用图片原始高度
-	* Persentage use `img Height` of function `format()` as 100% height. Default value `imgHeight = 0` will use image file height  
+Center alignment. Newline (`\n`) added to head and tail.
 
-### `<align to=left|center|right>`
-#### 快捷命令-Shotcut: `<left>``<center>``<right>`
-
-水平对齐方式。
-
-Line alignment.
-
-* 该命令必须在一行的最开始(紧跟`<br>`没有空格)
-* This command must be used at the begining of new line (follow a `<br>` without space)
-
-### `<font name= size= >` *一般不应使用-SHOULD NOT USE NORMALLY*
-使用系统字体。
-
-Set font to a system font.
-
-* name: String
-	* 系统字体名
-	* Name of an available font
-* size: Int
-
-### `<fontname>`
-#### 快捷命令-Shotcut: `<b>` = `<boldfont>`; `<i>` = `<italicfont>`
-使用 `TextFormater.fonts` 字典设置字体。本命令**不影响**字体大小。
-
-Set font to a font in dictionary `TextFormater.fonts`. This command will **NOT** affect font size.
-
-缺省有 `normalfont` `boldfont` `italicfont`，使用 `setFont` 方法设置
-
-There are `normalfont` `boldfont` `italicfont` by default. Can be added/modified by `setFont` member function.
-
-#### 注意 - Note
-应使用`</>`结束字体效果，而不是`<normalfont>`
-
-Use `</>` to end a font effect, `<normalfont>` is **NOT** for that purpose.
-
-### `<fontsize += >`, `<fontsize -= >`
-调整字体相对大小。
-
-Adjust font size relevantly.
-
-* `<fontsize +=0>`/`<fontsize -=0`> 将把字体设置为标准大小 (`normalFontSize`)
-* `<fontsize +=0>`/`<fontsize -=0`> will set font size to default size: (`normalFontSize`)
-
-* 将字体大小强制设为数值可使用 `<font size= >` 命令
-* Set font size to direct number could use `<font size= >`
-
-### `<color name=clear|black|blue|red|green|yellow|...>`
-#### 快捷命令-Shotcut: `<colorname>`
+### `<color black|blue|red|green|yellow|...>.*</color>`
 设置前景色。
 
 Set foreground color.
 
-* 颜色来自于 `colors` 词典，可以用 `setColor` 添加
-* Color name from `colors` dictionary, new color can be added by `setColor` member function
 
-### `<bgcolor name=clear|black|blue|red|green|yellow|...>`
+### `<bgcolor black|blue|red|green|yellow|...>.*</bgcolor>`
 
 设置背景色。
 
 Set background color.
 
-* 颜色来自于 `colors` 词典，可以用 `setColor` 添加
-* Color name from `colors` dictionary, new color can be added by `setColor` member function
+### `$equation$`
+行内模式数学公式。
+LaTeX equation in text mode.
+
+### `$$equation$$`
+单行居中数学公式。
+LaTeX equation in display mode.
+
 
 ## Author
 
