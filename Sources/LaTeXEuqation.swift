@@ -11,25 +11,21 @@ import iosMath
 
 open class LaTeXEquation: MarkdownCommonElement,MarkdownElement {
     
-    fileprivate static let regex = "(.?|^)(\\${1,3})(.+?)(\\2)"
+    fileprivate static let regex = "(.?|^)(\\${1,2})(.+?)(\\2)"
     
     open var font: MarkdownFont?
     open var color: MarkdownColor?
-    open var textHighlightColor: MarkdownColor?
-    open var textBackgroundColor: MarkdownColor?
+    private var textAlignment = MTTextAlignment.left
+    private var labelMode = MTMathUILabelMode.text
     
     open var regex: String {
         return LaTeXEquation.regex
     }
     
-    public init(font: MarkdownFont? = MarkdownCode.defaultFont,
-                color: MarkdownColor? = nil,
-                textHighlightColor: MarkdownColor? = MarkdownCode.defaultHighlightColor,
-                textBackgroundColor: MarkdownColor? = MarkdownCode.defaultBackgroundColor) {
+    public init(font: MarkdownFont? = MarkdownParser.defaultFont,
+                color: MarkdownColor? = MarkdownParser.defaultColor) {
         self.font = font
         self.color = color
-        self.textHighlightColor = textHighlightColor
-        self.textBackgroundColor = textBackgroundColor
     }
     
     #if os(iOS)
@@ -68,28 +64,59 @@ open class LaTeXEquation: MarkdownCommonElement,MarkdownElement {
     }
     #endif
     
-    private func formatLaTeX(latex:String, color:MarkdownColor? = nil) -> NSAttributedString {
+    private func formatLaTeX(latex:String) -> NSMutableAttributedString {
         let label = MTMathUILabel()
-        label.textColor = color ?? self.color ?? MarkdownColor.black
+        label.textColor = self.color ?? MarkdownColor.black
+        label.fontSize = self.font?.pointSize ?? 20
+        label.labelMode = self.labelMode
+        label.textAlignment = self.textAlignment
         label.latex = latex
         
         guard let image = self.getImage(from: label) else {
-            return NSAttributedString(string: latex)
+            return NSMutableAttributedString(string: latex)
         }
         
         let textAttachment = NSTextAttachment()
         textAttachment.image = image
         let latexString = NSMutableAttributedString(attachment: textAttachment)
+        if self.labelMode == .display {
+            latexString.insert(NSAttributedString(string: "\n"), at: latexString.length)
+            latexString.insert(NSAttributedString(string: "\n"), at: 0)
+        }
+        if self.textAlignment == .center {
+            let style = NSMutableParagraphStyle()
+            style.alignment = .center
+            latexString.addAttribute(.paragraphStyle, value: style, range: NSMakeRange(0, latexString.length))
+        }
         return latexString
     }
     
     open func addAttributes(_ attributedString: NSMutableAttributedString, range: NSRange) {
-        print(attributedString.string)
         let latex = attributedString.attributedSubstring(from: range).string.replacingOccurrences(of: "\\005c", with: "\\")
-        print(latex)
         let latexString = formatLaTeX(latex: latex)
+        latexString.addAttribute(.baselineOffset, value: CGFloat(-latexString.size().height/2+((self.font?.pointSize ?? 0)/2)), range: NSRange(location: 0, length: latexString.length))
 
         attributedString.replaceCharacters(in: range, with: latexString)
+    }
+    
+    public func match(_ match: NSTextCheckingResult, attributedString: NSMutableAttributedString) {
+        
+        let command = attributedString.attributedSubstring(from: match.range(at: 2)).string
+        
+        if command == "$" {
+            self.labelMode = .text
+            self.textAlignment = .left
+        } else {
+            // "$$"
+            self.labelMode = .display
+            self.textAlignment = .center
+        }
+        // deleting trailing markdown
+        attributedString.deleteCharacters(in: match.range(at: 4))
+        // formatting string (may alter the length)
+        addAttributes(attributedString, range: match.range(at: 3))
+        // deleting leading markdown
+        attributedString.deleteCharacters(in: match.range(at: 2))
     }
 }
 
