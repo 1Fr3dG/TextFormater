@@ -706,16 +706,16 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="ExampleOSX" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="400" height="311"/>
+                        <rect key="frame" x="0.0" y="0.0" width="400" height="711"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="zMh-bl-qlT">
-                                <rect key="frame" x="0.0" y="103" width="400" height="5"/>
+                                <rect key="frame" x="0.0" y="303" width="400" height="5"/>
                             </box>
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="UPq-dN-Sjo">
-                                <rect key="frame" x="-2" y="111" width="404" height="200"/>
+                                <rect key="frame" x="-2" y="311" width="404" height="400"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="200" id="EpP-cd-4ZJ"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="400" id="EpP-cd-4ZJ"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="400" id="xPN-RI-5Ro"/>
                                 </constraints>
                                 <textFieldCell key="cell" selectable="YES" title="Multiline Label" id="qEK-6t-frc">
@@ -725,9 +725,9 @@
                                 </textFieldCell>
                             </textField>
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n65-Rp-yG5">
-                                <rect key="frame" x="0.0" y="0.0" width="400" height="100"/>
+                                <rect key="frame" x="0.0" y="0.0" width="400" height="300"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="4N5-5u-mFn"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="300" id="4N5-5u-mFn"/>
                                 </constraints>
                                 <textFieldCell key="cell" selectable="YES" editable="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="DoQ-Fy-iz5">
                                     <font key="font" metaFont="system"/>

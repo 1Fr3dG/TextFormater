@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A42F619224408F600D1D049 /* test.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3A42F618224408F600D1D049 /* test.jpg */; };
 		3AB4B1D62240BB0B006FB518 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB4B1D52240BB0B006FB518 /* AppDelegate.swift */; };
 		3AB4B1D82240BB0B006FB518 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB4B1D72240BB0B006FB518 /* ViewController.swift */; };
 		3AB4B1DB2240BB0B006FB518 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AB4B1D92240BB0B006FB518 /* Main.storyboard */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3A42F618224408F600D1D049 /* test.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test.jpg; sourceTree = "<group>"; };
 		3AB4B1D22240BB0B006FB518 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AB4B1D52240BB0B006FB518 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3AB4B1D72240BB0B006FB518 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 		3AB4B1D42240BB0B006FB518 /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				3A42F618224408F600D1D049 /* test.jpg */,
 				3AB4B1D52240BB0B006FB518 /* AppDelegate.swift */,
 				3AB4B1D72240BB0B006FB518 /* ViewController.swift */,
 				3AB4B1D92240BB0B006FB518 /* Main.storyboard */,
@@ -85,7 +88,6 @@
 				C7548D42187D55E4D2B7D53F /* Pods-Example.debug.xcconfig */,
 				5AD569D7E72DDFB25E501E31 /* Pods-Example.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -152,6 +154,7 @@
 				3AB4B1E02240BB0C006FB518 /* LaunchScreen.storyboard in Resources */,
 				3AB4B1DD2240BB0C006FB518 /* Assets.xcassets in Resources */,
 				3AB4B1DB2240BB0B006FB518 /* Main.storyboard in Resources */,
+				3A42F619224408F600D1D049 /* test.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
